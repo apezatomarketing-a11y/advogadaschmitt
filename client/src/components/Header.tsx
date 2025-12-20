@@ -50,6 +50,7 @@ export default function Header() {
                     ? "text-[#FF9900]"
                     : "text-gray-700 hover:text-[#003366]"
                 }`}
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               >
                 {item.name}
               </a>
@@ -89,7 +90,10 @@ export default function Header() {
                       ? "text-[#FF9900]"
                       : "text-gray-700 hover:text-[#003366]"
                   }`}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 >
                   {item.name}
                 </a>

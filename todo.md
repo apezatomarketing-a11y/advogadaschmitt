@@ -64,3 +64,20 @@
 - [ ] Documentar credenciais de admin
 - [ ] Criar guia de uso do painel admin
 - [ ] Documentar estrutura do projeto
+
+## Melhorias Visuais e UX
+- [ ] Adicionar banners profissionais em todas as páginas
+- [ ] Gerar imagens com IA (escritório, sócias, etc)
+- [ ] Implementar degradê nas transições de cores
+- [ ] Botão WhatsApp flutuante com efeito bolha
+- [ ] Botão voltar ao topo no canto inferior esquerdo
+- [ ] Animações ao carregar página (fade-in, slide-in)
+- [ ] Animações ao fazer scroll (intersection observer)
+- [ ] Remover divisões abruptas de cores
+
+## Deploy no Netlify
+- [ ] Configurar variáveis de ambiente no Netlify
+- [ ] Conectar repositório GitHub ao Netlify
+- [ ] Configurar build settings
+- [ ] Testar deploy
+- [ ] Configurar domínio customizado
