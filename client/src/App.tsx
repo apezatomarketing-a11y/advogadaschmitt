@@ -12,6 +12,7 @@ import Publications from "./pages/Publications";
 import PublicationDetail from "./pages/PublicationDetail";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPublicationForm from "./pages/AdminPublicationForm";
+import AdminLogin from "./pages/AdminLogin";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +24,7 @@ function Router() {
       <Route path={"/contato"} component={Contact} />
       <Route path={"/publicacoes"} component={Publications} />
       <Route path={"/publicacoes/:slug"} component={PublicationDetail} />
+      <Route path={"/admin/login"} component={AdminLogin} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/admin/publicacoes/nova"} component={AdminPublicationForm} />
       <Route path={"/admin/publicacoes/:id/editar"} component={AdminPublicationForm} />

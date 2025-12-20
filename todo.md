@@ -18,7 +18,7 @@
 - [x] Componente de Cards com efeitos hover
 
 ## Frontend - Painel Admin
-- [x] Página de Login do Admin (via OAuth Manus)
+- [x] Página de Login do Admin (login/senha local)
 - [x] Dashboard Admin com listagem de publicações
 - [x] Página de Criar Nova Publicação
 - [x] Página de Editar Publicação

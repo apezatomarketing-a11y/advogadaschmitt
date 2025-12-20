@@ -1,42 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { Plus, Edit2, Trash2, Eye, LogOut } from "lucide-react";
 
 export default function AdminDashboard() {
-  const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
+  const [adminName, setAdminName] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    const name = localStorage.getItem("adminName");
+    if (!token) {
+      setLocation("/admin/login");
+      return;
+    }
+    setAdminName(name || "Admin");
+    setIsAuthenticated(true);
+  }, [setLocation]);
 
   const { data: publications = [], isLoading, refetch } = trpc.publications.listAll.useQuery();
   const deletePublicationMutation = trpc.publications.delete.useMutation({
     onSuccess: () => refetch(),
   });
 
-  // Redirecionar se não for admin
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Acesso Negado
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Você não tem permissão para acessar esta página.
-          </p>
-          <Link href="/">
-            <a className="text-[#FF9900] hover:text-[#FF9900]/90 font-semibold">
-              Voltar para Home
-            </a>
-          </Link>
-        </div>
-      </div>
-    );
+  if (!isAuthenticated) {
+    return null;
   }
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminEmail");
+    localStorage.removeItem("adminName");
     setLocation("/");
   };
 
@@ -64,7 +60,7 @@ export default function AdminDashboard() {
               Painel Administrativo
             </h1>
             <p className="text-sm text-gray-600">
-              Bem-vindo, {user?.name || "Admin"}
+              Bem-vindo, {adminName}
             </p>
           </div>
           <button

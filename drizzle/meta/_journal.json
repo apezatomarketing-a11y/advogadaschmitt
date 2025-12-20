@@ -15,6 +15,13 @@
       "when": 1766243556958,
       "tag": "0001_round_mongoose",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766244454679,
+      "tag": "0002_lyrical_puppet_master",
+      "breakpoints": true
     }
   ]
 }

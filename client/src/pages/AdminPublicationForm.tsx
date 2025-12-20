@@ -1,14 +1,22 @@
 import { useState, useEffect } from "react";
 import { useRoute, useLocation } from "wouter";
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, Save } from "lucide-react";
 
 export default function AdminPublicationForm() {
-  const { user } = useAuth();
   const [, setLocation] = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [match, params] = useRoute("/admin/publicacoes/:id/editar");
+
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      setLocation("/admin/login");
+      return;
+    }
+    setIsAuthenticated(true);
+  }, [setLocation]);
 
   const publicationId = params?.id ? parseInt(params.id) : null;
   const isEditing = !!match && !!publicationId;
@@ -18,7 +26,7 @@ export default function AdminPublicationForm() {
     slug: "",
     description: "",
     content: "",
-    author: user?.name || "",
+    author: "Dra. Patrícia Vieira Schmitt",
     tags: "",
     coverImage: "",
     published: 0,
@@ -56,28 +64,6 @@ export default function AdminPublicationForm() {
       });
     }
   }, [publication]);
-
-  // Redirecionar se não for admin
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Acesso Negado
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Você não tem permissão para acessar esta página.
-          </p>
-          <button
-            onClick={() => setLocation("/")}
-            className="text-[#FF9900] hover:text-[#FF9900]/90 font-semibold"
-          >
-            Voltar para Home
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -134,6 +120,10 @@ export default function AdminPublicationForm() {
 
   const isSubmitting =
     createMutation.status === "pending" || updateMutation.status === "pending";
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, publications, InsertPublication, leads, InsertLead, practiceAreas, InsertPracticeArea } from "../drizzle/schema";
+import { InsertUser, users, publications, InsertPublication, leads, InsertLead, practiceAreas, InsertPracticeArea, adminUsers, AdminUser } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import * as crypto from 'crypto';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -160,4 +161,48 @@ export async function createPracticeArea(data: InsertPracticeArea) {
   if (!db) throw new Error("Database not available");
   const result = await db.insert(practiceAreas).values(data);
   return result;
+}
+
+// Admin authentication
+export async function createAdminUser(email: string, password: string, name: string): Promise<AdminUser | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create admin user: database not available");
+    return null;
+  }
+
+  try {
+    const passwordHash = hashPassword(password);
+    await db.insert(adminUsers).values({
+      email,
+      passwordHash,
+      name,
+      active: 1,
+    });
+    
+    const result = await db.select().from(adminUsers).where(eq(adminUsers.email, email)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to create admin user:", error);
+    return null;
+  }
+}
+
+export async function getAdminByEmail(email: string): Promise<AdminUser | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get admin user: database not available");
+    return null;
+  }
+
+  const result = await db.select().from(adminUsers).where(eq(adminUsers.email, email)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password + (process.env.JWT_SECRET || 'secret')).digest('hex');
+}
+
+export function verifyPassword(password: string, hash: string): boolean {
+  return hashPassword(password) === hash;
 }
