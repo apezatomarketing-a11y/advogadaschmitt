@@ -5,12 +5,27 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Areas from "./pages/Areas";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Publications from "./pages/Publications";
+import PublicationDetail from "./pages/PublicationDetail";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminPublicationForm from "./pages/AdminPublicationForm";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/areas"} component={Areas} />
+      <Route path={"/sobre"} component={About} />
+      <Route path={"/contato"} component={Contact} />
+      <Route path={"/publicacoes"} component={Publications} />
+      <Route path={"/publicacoes/:slug"} component={PublicationDetail} />
+      <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/admin/publicacoes/nova"} component={AdminPublicationForm} />
+      <Route path={"/admin/publicacoes/:id/editar"} component={AdminPublicationForm} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

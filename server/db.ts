@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, publications, InsertPublication, leads, InsertLead, practiceAreas, InsertPracticeArea } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,75 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Funções para Publicações
+export async function createPublication(data: InsertPublication) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(publications).values(data);
+  return result;
+}
+
+export async function getPublications(published?: boolean) {
+  const db = await getDb();
+  if (!db) return [];
+  const query = published !== undefined 
+    ? db.select().from(publications).where(eq(publications.published, published ? 1 : 0))
+    : db.select().from(publications);
+  return query;
+}
+
+export async function getPublicationBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(publications).where(eq(publications.slug, slug)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getPublicationById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(publications).where(eq(publications.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updatePublication(id: number, data: Partial<InsertPublication>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.update(publications).set(data).where(eq(publications.id, id));
+  return result;
+}
+
+export async function deletePublication(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.delete(publications).where(eq(publications.id, id));
+  return result;
+}
+
+// Funções para Leads
+export async function createLead(data: InsertLead) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(leads).values(data);
+  return result;
+}
+
+export async function getLeads() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(leads);
+}
+
+// Funções para Áreas de Atuação
+export async function getPracticeAreas() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(practiceAreas).orderBy(practiceAreas.order);
+}
+
+export async function createPracticeArea(data: InsertPracticeArea) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(practiceAreas).values(data);
+  return result;
+}
