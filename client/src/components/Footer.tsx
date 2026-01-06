@@ -155,6 +155,17 @@ export default function Footer() {
             <p className="text-sm text-gray-400 text-center">
               &copy; {currentYear} {BRAND_NAME}. Todos os direitos reservados.
             </p>
+            <p className="text-sm text-gray-400 text-center mt-2">
+              Desenvolvido por{" "}
+              <a
+                href="https://www.apezatomarketing.com.br"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#FF9900] hover:text-[#FF9900]/80 transition-colors font-medium"
+              >
+                Apezato Marketing
+              </a>
+            </p>
           </div>
         </div>
       </footer>

@@ -5,6 +5,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ScrollToTop from "./components/ScrollToTop";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 import Home from "./pages/Home";
 import Areas from "./pages/Areas";
 import About from "./pages/About";
@@ -52,6 +53,7 @@ function App() {
           <Toaster />
           <Router />
           <ScrollToTop />
+          <ScrollToTopButton />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
