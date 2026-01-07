@@ -80,7 +80,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     }
 
     // Handle different syntax for MySQL and PostgreSQL
-    if (process.env.DATABASE_URL?.startsWith("postgres")) {
+    if (process.env.DATABASE_URL?.startsWith("postgres") || process.env.DATABASE_URL?.startsWith("postgresql")) {
       await db.insert(users).values(values).onConflictDoUpdate({
         target: users.openId,
         set: updateSet,

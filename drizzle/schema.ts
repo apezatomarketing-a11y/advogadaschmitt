@@ -1,10 +1,6 @@
 import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
-import { pgTable, serial, text as pgText, varchar as pgVarchar, integer as pgInteger, timestamp as pgTimestamp } from "drizzle-orm/pg-core";
 
-// Note: Drizzle allows defining schemas for multiple databases. 
-// Since we want to support both MySQL and PostgreSQL (Supabase), 
-// we'll use a trick: we define the schema and the db.ts will handle the connection.
-// For PostgreSQL, we need to ensure column names match the database.
+// Sincronizado com as tabelas existentes do usuário no Supabase (snake_case)
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -12,9 +8,9 @@ export const users = mysqlTable("users", {
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginmethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
-  createdAt: timestamp("createdat").defaultNow().notNull(),
-  updatedAt: timestamp("updatedat").defaultNow().onUpdateNow().notNull(),
+  role: varchar("role", { length: 20 }).default("user").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
   lastSignedIn: timestamp("lastsignedin").defaultNow().notNull(),
 });
 
@@ -27,26 +23,25 @@ export const adminUsers = mysqlTable("admin_users", {
   passwordHash: text("passwordhash").notNull(),
   name: text("name"),
   active: int("active").default(1).notNull(),
-  createdAt: timestamp("createdat").defaultNow().notNull(),
-  updatedAt: timestamp("updatedat").defaultNow().onUpdateNow().notNull(),
+  role: varchar("role", { length: 20 }).default("editor").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type InsertAdminUser = typeof adminUsers.$inferInsert;
 
-export const publications = mysqlTable("publications", {
+// Usando blog_posts conforme as tabelas existentes do usuário
+export const publications = mysqlTable("blog_posts", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
-  description: text("description"),
   content: text("content").notNull(),
-  author: varchar("author", { length: 255 }).notNull(),
-  tags: text("tags"),
-  coverImage: varchar("coverimage", { length: 512 }),
-  published: int("published").default(0).notNull(),
-  publishedAt: timestamp("publishedat"),
-  createdAt: timestamp("createdat").defaultNow().notNull(),
-  updatedAt: timestamp("updatedat").defaultNow().onUpdateNow().notNull(),
+  excerpt: text("excerpt"),
+  status: varchar("status", { length: 20 }).default("draft").notNull(),
+  featuredImage: varchar("featured_image", { length: 512 }),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export type Publication = typeof publications.$inferSelect;
@@ -56,10 +51,11 @@ export const leads = mysqlTable("leads", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 320 }).notNull(),
-  phone: varchar("phone", { length: 20 }),
+  phone: varchar("whatsapp", { length: 20 }), // Mapeado para whatsapp conforme tabela do usuário
   message: text("message"),
   source: varchar("source", { length: 100 }),
-  createdAt: timestamp("createdat").defaultNow().notNull(),
+  status: varchar("status", { length: 20 }).default("novo").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export type Lead = typeof leads.$inferSelect;
@@ -73,8 +69,8 @@ export const practiceAreas = mysqlTable("practice_areas", {
   descriptionEn: text("descriptionen"),
   icon: varchar("icon", { length: 100 }),
   order: int("sort_order").default(0).notNull(),
-  createdAt: timestamp("createdat").defaultNow().notNull(),
-  updatedAt: timestamp("updatedat").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export type PracticeArea = typeof practiceAreas.$inferSelect;
