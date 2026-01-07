@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWhatsapp from "@/components/FloatingWhatsapp";
 import { trpc } from "@/lib/trpc";
-import { Calendar, User, ArrowLeft } from "lucide-react";
+import { Calendar, User, ArrowLeft, Clock } from "lucide-react";
 import { Link } from "wouter";
 import { Streamdown } from "streamdown";
 
@@ -49,92 +49,94 @@ export default function PublicationDetail() {
   }
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString("pt-BR", {
+    const d = new Date(date);
+    const dateStr = d.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
       year: "numeric",
-      month: "long",
-      day: "numeric",
     });
+    const timeStr = d.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `${dateStr} às ${timeStr}`;
   };
-
-  const tags = publication.tags ? JSON.parse(publication.tags) : [];
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
 
       {/* Hero Section */}
-      {publication.coverImage && (
-        <section className="pt-32 pb-12 px-4 bg-gradient-to-br from-[#003366] to-[#0099CC] text-white">
-          <div className="container mx-auto max-w-4xl">
-            <img
-              src={publication.coverImage}
-              alt={publication.title}
-              className="w-full h-96 object-cover rounded-lg mb-8"
-            />
-          </div>
-        </section>
-      )}
-
-      {/* Article Content */}
-      <section className="py-12 px-4 flex-grow">
+      <section className="pt-32 pb-12 px-4 bg-[#003366] text-white">
         <div className="container mx-auto max-w-4xl">
           <Link href="/publicacoes">
-            <a className="flex items-center gap-2 text-[#FF9900] hover:text-[#FF9900]/90 font-semibold mb-8">
+            <a className="inline-flex items-center gap-2 text-[#FF9900] hover:text-[#FF9900]/90 font-semibold mb-8 transition-colors">
               <ArrowLeft size={18} />
               Voltar para Publicações
             </a>
           </Link>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            {publication.title}
+          </h1>
+          <div className="flex flex-wrap items-center gap-6 text-blue-100/80">
+            <div className="flex items-center gap-2">
+              <Calendar size={18} className="text-[#FF9900]" />
+              <span>
+                {formatDate(new Date(publication.publishedAt || publication.createdAt))}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <User size={18} className="text-[#FF9900]" />
+              <span>{publication.author}</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      {/* Article Content */}
+      <section className="py-16 px-4 flex-grow">
+        <div className="container mx-auto max-w-4xl">
           <article>
-            <header className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-[#003366] mb-4">
-                {publication.title}
-              </h1>
-              <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-6">
-                <div className="flex items-center gap-2">
-                  <Calendar size={18} />
-                  <span>
-                    {formatDate(new Date(publication.publishedAt || publication.createdAt))}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <User size={18} />
-                  <span>{publication.author}</span>
-                </div>
+            {/* Cover Image */}
+            {publication.featuredImage && (
+              <div className="mb-12">
+                <img
+                  src={publication.featuredImage}
+                  alt={publication.title}
+                  className="w-full h-auto max-h-[500px] object-cover rounded-2xl shadow-lg"
+                />
               </div>
-              {publication.description && (
-                <p className="text-lg text-gray-700 italic border-l-4 border-[#FF9900] pl-4">
+            )}
+
+            {/* Subtitle/Description */}
+            {publication.description && (
+              <div className="mb-10">
+                <p className="text-2xl text-gray-600 font-medium leading-relaxed border-l-4 border-[#FF9900] pl-6">
                   {publication.description}
                 </p>
-              )}
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-6">
-                  {tags.map((tag: string) => (
-                    <span
-                      key={tag}
-                      className="text-sm bg-[#FF9900]/10 text-[#FF9900] px-3 py-1 rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </header>
+              </div>
+            )}
 
-            <div className="prose prose-lg max-w-none text-gray-700">
+            {/* Main Text */}
+            <div className="prose prose-lg max-w-none text-gray-700 prose-headings:text-[#003366] prose-a:text-[#FF9900] prose-img:rounded-xl">
               <Streamdown>{publication.content}</Streamdown>
             </div>
           </article>
 
           {/* Author Info */}
-          <div className="mt-16 pt-8 border-t border-gray-200">
-            <div className="bg-gray-50 rounded-lg p-8">
-              <h3 className="text-xl font-bold text-[#003366] mb-2">
-                Sobre o Autor
-              </h3>
-              <p className="text-gray-700">
-                {publication.author} é especialista em direito empresarial e atua na Vieira Schmitt Advocacia.
-              </p>
+          <div className="mt-20 pt-10 border-t border-gray-100">
+            <div className="bg-gray-50 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6">
+              <div className="w-20 h-20 bg-[#003366] rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                {publication.author.charAt(0)}
+              </div>
+              <div className="text-center md:text-left">
+                <h3 className="text-xl font-bold text-[#003366] mb-2">
+                  {publication.author}
+                </h3>
+                <p className="text-gray-600">
+                  Especialista em Direito na Vieira Schmitt Advocacia. Comprometida com a excelência e a defesa dos interesses de nossos clientes.
+                </p>
+              </div>
             </div>
           </div>
         </div>

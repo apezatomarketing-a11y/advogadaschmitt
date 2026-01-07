@@ -20,20 +20,15 @@ export const handler: Handler = async (event, context) => {
 
   try {
     // The fetchRequestHandler expects the path to include the endpoint
-    // We use the rawUrl to get the full path and ensure tRPC can parse the procedure name
+    // We use the rawUrl to get the full path
     const url = new URL(event.rawUrl);
     
-    // If the URL is something like /.netlify/functions/trpc/admin.login
-    // we need to make sure the endpoint matches the prefix
-    const path = url.pathname;
-    let endpoint = "/api/trpc";
+    // When redirected from /api/trpc/* to /.netlify/functions/trpc
+    // we need to make sure the tRPC fetch adapter knows where the endpoint starts
+    // If the URL is /api/trpc/admin.login, the endpoint is /api/trpc
     
-    if (path.includes("/.netlify/functions/trpc")) {
-      endpoint = "/.netlify/functions/trpc";
-    }
-
     const response = await fetchRequestHandler({
-      endpoint,
+      endpoint: "/api/trpc",
       req: new Request(url.toString(), {
         method: event.httpMethod,
         headers: new Headers(event.headers as Record<string, string>),

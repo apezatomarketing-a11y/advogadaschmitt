@@ -43,11 +43,17 @@ export default function AdminDashboard() {
   };
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString("pt-BR", {
+    const d = new Date(date);
+    const dateStr = d.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
       year: "numeric",
-      month: "long",
-      day: "numeric",
     });
+    const timeStr = d.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `${dateStr} às ${timeStr}`;
   };
 
   return (
@@ -114,10 +120,7 @@ export default function AdminDashboard() {
                       Título
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                      Autor
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                      Data
+                      Data e Autor
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
                       Status
@@ -136,10 +139,7 @@ export default function AdminDashboard() {
                         </p>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600">
-                        {pub.author}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {formatDate(new Date(pub.publishedAt || pub.createdAt))}
+                        {formatDate(new Date(pub.publishedAt || pub.createdAt))} - {pub.author}
                       </td>
                       <td className="px-6 py-4">
                         <span

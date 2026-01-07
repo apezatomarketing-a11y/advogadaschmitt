@@ -52,14 +52,13 @@ export default function Publications() {
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-40 pb-24 px-4 bg-gradient-header text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10"></div>
+      <section className="pt-40 pb-24 px-4 bg-[#003366] text-white relative overflow-hidden">
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="animate-slideInLeft">
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
               Blog
             </h1>
-            <p className="text-xl text-gray-200 max-w-2xl leading-relaxed">
+            <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed">
               Conheça as últimas análises jurídicas e insights sobre direito empresarial, compliance e saúde.
             </p>
           </div>
@@ -116,53 +115,51 @@ export default function Publications() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPublications.map((publication) => (
                 <Link key={publication.id} href={`/publicacoes/${publication.slug}`}>
                   <a className="group">
-                    <div className="h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden hover-lift flex flex-col animate-slideInUp">
-                      {publication.coverImage && (
-                        <div className="h-48 bg-gradient-to-br from-[#003366] to-[#0099CC] overflow-hidden">
+                    <div className="h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden hover-lift flex flex-col animate-slideInUp shadow-sm hover:shadow-xl transition-all duration-300">
+                      {/* Foto do Post */}
+                      <div className="h-56 bg-gray-100 overflow-hidden relative">
+                        {publication.featuredImage ? (
                           <img
-                            src={publication.coverImage}
+                            src={publication.featuredImage}
                             alt={publication.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                        </div>
-                      )}
-                      <div className="p-6 flex flex-col flex-grow">
-                        <h3 className="text-lg font-bold text-[#003366] mb-2 line-clamp-2 group-hover:text-[#FF9900] transition-colors">
-                          {publication.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
-                          {publication.description}
-                        </p>
-                        <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
-                          <div className="flex items-center gap-1">
-                            <Calendar size={14} />
-                            {formatDate(new Date(publication.publishedAt || publication.createdAt))}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <User size={14} />
-                            {publication.author}
-                          </div>
-                        </div>
-                        {publication.tags && (
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {JSON.parse(publication.tags).map((tag: string) => (
-                              <span
-                                key={tag}
-                                className="text-xs bg-[#FF9900]/10 text-[#FF9900] px-2 py-1 rounded-full"
-                              >
-                                {tag}
-                              </span>
-                            ))}
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-[#003366]/5">
+                            <span className="text-[#003366]/20 font-bold text-4xl">VS</span>
                           </div>
                         )}
-                        <Button className="w-full bg-[#FF9900] text-white hover:bg-[#FF9900]/90 rounded-lg text-sm flex items-center justify-center gap-2">
-                          Ler Artigo
-                          <ArrowRight size={16} />
-                        </Button>
+                      </div>
+
+                      <div className="p-8 flex flex-col flex-grow">
+                        {/* Título */}
+                        <h3 className="text-xl font-bold text-[#003366] mb-3 line-clamp-2 group-hover:text-[#FF9900] transition-colors leading-tight">
+                          {publication.title}
+                        </h3>
+                        
+                        {/* Subtítulo (Description) */}
+                        <p className="text-gray-600 text-sm mb-6 line-clamp-3 flex-grow leading-relaxed">
+                          {publication.description}
+                        </p>
+
+                        <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Postado em</span>
+                            <span className="text-xs text-gray-600 font-medium">
+                              {new Date(publication.publishedAt || publication.createdAt).toLocaleDateString("pt-BR")}
+                            </span>
+                          </div>
+                          <div className="flex flex-col gap-1 items-end">
+                            <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Por</span>
+                            <span className="text-xs text-gray-600 font-medium">
+                              {publication.author}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </a>
