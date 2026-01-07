@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function Footer() {
   const [openModal, setOpenModal] = useState<string | null>(null);
-  const currentYear = new Date().getFullYear();
+  const currentYear = 2026;
 
   return (
     <>

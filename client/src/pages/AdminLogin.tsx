@@ -66,7 +66,7 @@ export default function AdminLogin() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF9900] transition-all"
-                placeholder="seu@email.com"
+                placeholder=""
                 disabled={loginMutation.status === "pending"}
               />
             </div>
@@ -80,7 +80,7 @@ export default function AdminLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF9900] transition-all"
-                placeholder="••••••••"
+                placeholder=""
                 disabled={loginMutation.status === "pending"}
               />
             </div>
@@ -95,24 +95,12 @@ export default function AdminLogin() {
             </Button>
           </form>
 
-          {/* Info Box */}
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-gray-700">
-              <strong>Credenciais de Acesso:</strong>
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              Email: <code className="bg-gray-100 px-2 py-1 rounded">advVieiraSchmitt@vieira-schmitt.com.br</code>
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              Senha: <code className="bg-gray-100 px-2 py-1 rounded">V$3ir@Schmitt2025!Adv</code>
-            </p>
-          </div>
         </div>
 
         {/* Footer */}
         <div className="text-center mt-8 text-white">
           <p className="text-sm opacity-80">
-            © 2025 Vieira Schmitt Advocacia. Todos os direitos reservados.
+            © 2026 Vieira Schmitt Advocacia. Todos os direitos reservados.
           </p>
         </div>
       </div>

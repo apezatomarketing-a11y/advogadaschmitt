@@ -19,18 +19,21 @@ export const handler: Handler = async (event, context) => {
   }
 
   try {
-    // Netlify functions receive the path relative to the function name
-    // If called via /api/trpc/getUser, event.path might be /.netlify/functions/trpc/getUser
-    // We need to ensure the tRPC fetch adapter sees the correct path
-    
-    const url = new URL(event.rawUrl || `https://${event.headers.host}${event.path}`);
-    
     // The fetchRequestHandler expects the path to include the endpoint
-    // If our endpoint is /api/trpc, and we call /api/trpc/user.me
-    // we need to make sure the URL passed to the handler reflects this.
+    // We use the rawUrl to get the full path and ensure tRPC can parse the procedure name
+    const url = new URL(event.rawUrl);
     
+    // If the URL is something like /.netlify/functions/trpc/admin.login
+    // we need to make sure the endpoint matches the prefix
+    const path = url.pathname;
+    let endpoint = "/api/trpc";
+    
+    if (path.includes("/.netlify/functions/trpc")) {
+      endpoint = "/.netlify/functions/trpc";
+    }
+
     const response = await fetchRequestHandler({
-      endpoint: "/api/trpc",
+      endpoint,
       req: new Request(url.toString(), {
         method: event.httpMethod,
         headers: new Headers(event.headers as Record<string, string>),
