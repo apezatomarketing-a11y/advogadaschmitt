@@ -15,6 +15,9 @@ import PublicationDetail from "./pages/PublicationDetail";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPublicationForm from "./pages/AdminPublicationForm";
 import AdminLogin from "./pages/AdminLogin";
+import ParaEmpresas from "./pages/ParaEmpresas";
+import Saude from "./pages/Saude";
+import Familia from "./pages/Familia";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -25,7 +28,11 @@ function Router() {
       <Route path={"/sobre"} component={About} />
       <Route path={"/contato"} component={Contact} />
       <Route path={"/publicacoes"} component={Publications} />
+      <Route path={"/blog"} component={Publications} />
       <Route path={"/publicacoes/:slug"} component={PublicationDetail} />
+      <Route path={"/para-empresas"} component={ParaEmpresas} />
+      <Route path={"/saude"} component={Saude} />
+      <Route path={"/familia"} component={Familia} />
       <Route path={"/admin/login"} component={AdminLogin} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/admin/publicacoes/nova"} component={AdminPublicationForm} />
@@ -47,7 +54,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
-        // switchable
+        switchable
       >
         <TooltipProvider>
           <Toaster />

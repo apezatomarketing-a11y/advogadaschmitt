@@ -87,7 +87,7 @@ export default function Header() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
           ? "py-2 bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 shadow-lg"
-          : "py-6 bg-gradient-header"
+          : "py-6 bg-[#003366] dark:bg-gray-950"
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -105,10 +105,12 @@ export default function Header() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg md:text-xl font-bold text-[#003366] dark:text-white leading-none">
+            <span className={`text-lg md:text-xl font-bold leading-none transition-colors ${
+              isScrolled ? "text-[#003366] dark:text-white" : "text-white"
+            }`}>
               Vieira Schmitt
             </span>
-            <span className="text-[10px] md:text-xs text-[#FF9900] font-semibold tracking-wider uppercase">
+            <span className="text-[10px] md:text-xs text-[#FF9900] font-semibold tracking-wider uppercase transition-colors">
               Advocacia
             </span>
           </div>
@@ -128,7 +130,7 @@ export default function Header() {
                 className={`text-sm font-medium transition-all duration-300 flex items-center gap-1 nav-link-underline ${
                   location === item.path || (item.dropdown && item.dropdown.some(d => location === d.path))
                     ? "text-[#FF9900]"
-                    : "text-[#003366] dark:text-gray-200 hover:text-[#FF9900]"
+                    : isScrolled ? "text-[#003366] dark:text-gray-200 hover:text-[#FF9900]" : "text-white hover:text-[#FF9900]"
                 }`}
               >
                 {item.name}
@@ -165,7 +167,9 @@ export default function Header() {
         <div className="hidden lg:flex items-center gap-6">
           <button
             onClick={toggleTheme}
-            className="p-2 text-[#003366] dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all duration-300 hover:rotate-12"
+            className={`p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all duration-300 hover:rotate-12 ${
+              isScrolled ? "text-[#003366] dark:text-gray-200" : "text-white"
+            }`}
             title="Alternar Tema"
           >
             {theme === "dark" ? <Sun size={20} className="text-[#FF9900]" /> : <Moon size={20} />}
@@ -181,13 +185,17 @@ export default function Header() {
         <div className="lg:hidden flex items-center gap-4">
           <button
             onClick={toggleTheme}
-            className="p-2 text-[#003366] dark:text-gray-200"
+            className={`p-2 ${
+              isScrolled ? "text-[#003366] dark:text-gray-200" : "text-white"
+            }`}
           >
-            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+            {theme === "dark" ? <Sun size={20} className="text-[#FF9900]" /> : <Moon size={20} />}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#003366] dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className={`p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors ${
+              isScrolled ? "text-[#003366] dark:text-gray-200" : "text-white"
+            }`}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

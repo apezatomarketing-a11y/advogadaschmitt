@@ -28,7 +28,7 @@ export default function FloatingWhatsapp() {
       ></div>
 
       {/* Botao principal */}
-      <button className="relative bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#20BA5A] transition-all duration-300 hover:scale-110 flex items-center justify-center animate-fadeIn">
+      <button className="relative bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#20BA5A] transition-all duration-300 hover:scale-110 hover-lift hover-glow flex items-center justify-center animate-fadeIn">
         <MessageCircle size={28} fill="currentColor" />
       </button>
 

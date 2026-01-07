@@ -265,6 +265,28 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 
+  /* Efeito de Brilho */
+  .hover-glow {
+    position: relative;
+    overflow: hidden;
+  }
+  .hover-glow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  .hover-glow:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
   /* Linha deslizante no menu */
   .nav-link-underline {
     position: relative;

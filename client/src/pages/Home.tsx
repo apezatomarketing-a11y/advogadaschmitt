@@ -39,7 +39,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-40 pb-24 px-4 bg-gradient-header text-white relative overflow-hidden">
+      <section className="pt-40 pb-24 px-4 bg-[#003366] dark:bg-gray-950 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10"></div>
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -82,7 +82,7 @@ export default function Home() {
 
       {/* Practice Areas */}
       <section className="py-32 px-4 bg-gray-50 dark:bg-gray-900/50 relative">
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#003366] to-transparent opacity-10"></div>
+
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-20 animate-fadeIn">
             <h2 className="text-4xl md:text-5xl font-bold text-[#003366] dark:text-white mb-6">
@@ -123,7 +123,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link href="/areas">
               <a>
-                <Button className="bg-[#003366] text-white hover:bg-[#003366]/90 rounded-full px-8">
+                <Button className="bg-[#003366] text-white hover:bg-[#003366]/90 rounded-full px-8 hover-lift hover-glow">
                   Ver Todas as Áreas
                   <ArrowRight className="ml-2" size={18} />
                 </Button>
@@ -152,7 +152,7 @@ export default function Home() {
               </p>
               <Link href="/sobre">
                 <a>
-                  <Button className="bg-[#FF9900] text-white hover:bg-[#FF9900]/90 rounded-full px-8">
+                  <Button className="bg-[#FF9900] text-white hover:bg-[#FF9900]/90 rounded-full px-8 hover-lift hover-glow">
                     Saiba Mais
                     <ArrowRight className="ml-2" size={18} />
                   </Button>
@@ -196,7 +196,7 @@ export default function Home() {
             Agende uma consultoria gratuita e descubra como podemos ajudar sua empresa a crescer com segurança jurídica.
           </p>
           <a href={BRAND_WHATSAPP} target="_blank" rel="noopener noreferrer">
-            <Button className="bg-[#FF9900] text-white hover:bg-[#FF9900]/90 rounded-full px-12 py-6 text-lg">
+            <Button className="bg-[#FF9900] text-white hover:bg-[#FF9900]/90 rounded-full px-12 py-6 text-lg hover-lift hover-glow">
               Agendar Consultoria Agora
               <ArrowRight className="ml-2" size={20} />
             </Button>

@@ -9,8 +9,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bg-gradient-footer text-white pt-24 pb-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[#003366] -z-10"></div>
+      <footer className="bg-[#003366] dark:bg-gray-950 text-white pt-24 pb-12 relative overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             {/* Brand Column */}
