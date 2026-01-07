@@ -1,16 +1,26 @@
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
+import { drizzle as drizzlePostgres } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { InsertUser, users, publications, InsertPublication, leads, InsertLead, practiceAreas, InsertPracticeArea, adminUsers, AdminUser } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import * as crypto from 'crypto';
 
-let _db: ReturnType<typeof drizzle> | null = null;
+let _db: any = null;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      const url = process.env.DATABASE_URL;
+      if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
+        console.log("[Database] Connecting to PostgreSQL (Supabase)...");
+        const queryClient = postgres(url);
+        _db = drizzlePostgres(queryClient);
+      } else {
+        console.log("[Database] Connecting to MySQL...");
+        _db = drizzleMysql(url);
+      }
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -31,7 +41,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
 
   try {
-    const values: InsertUser = {
+    const values: any = {
       openId: user.openId,
     };
     const updateSet: Record<string, unknown> = {};
@@ -69,9 +79,17 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
-      set: updateSet,
-    });
+    // Handle different syntax for MySQL and PostgreSQL
+    if (process.env.DATABASE_URL?.startsWith("postgres")) {
+      await db.insert(users).values(values).onConflictDoUpdate({
+        target: users.openId,
+        set: updateSet,
+      });
+    } else {
+      await db.insert(users).values(values).onDuplicateKeyUpdate({
+        set: updateSet,
+      });
+    }
   } catch (error) {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
