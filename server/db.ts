@@ -2,118 +2,73 @@ import { eq } from "drizzle-orm";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
 import { drizzle as drizzlePostgres } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { InsertUser, users, publications, InsertPublication, leads, InsertLead, practiceAreas, InsertPracticeArea, adminUsers, AdminUser } from "../drizzle/schema";
+import * as schema from "../drizzle/schema";
 import { ENV } from './_core/env';
 import * as crypto from 'crypto';
 
+const { users, publications, leads, practiceAreas, adminUsers } = schema;
+
 let _db: any = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
       const url = process.env.DATABASE_URL;
       if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
-        console.log("[Database] Connecting to PostgreSQL (Supabase)...");
         const queryClient = postgres(url);
         _db = drizzlePostgres(queryClient);
       } else {
-        console.log("[Database] Connecting to MySQL...");
         _db = drizzleMysql(url);
       }
     } catch (error) {
-      console.warn("[Database] Failed to connect:", error);
+      console.error("[Database] Connection error:", error);
       _db = null;
     }
   }
   return _db;
 }
 
-export async function upsertUser(user: InsertUser): Promise<void> {
-  if (!user.openId) {
-    throw new Error("User openId is required for upsert");
-  }
-
+export async function upsertUser(user: schema.InsertUser): Promise<void> {
   const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot upsert user: database not available");
-    return;
+  if (!db || !user.openId) return;
+
+  const values: any = { openId: user.openId };
+  const updateSet: Record<string, any> = {};
+
+  ["name", "email", "loginMethod"].forEach((field) => {
+    const val = (user as any)[field];
+    if (val !== undefined) {
+      values[field] = val ?? null;
+      updateSet[field] = val ?? null;
+    }
+  });
+
+  if (user.lastSignedIn) {
+    values.lastSignedIn = user.lastSignedIn;
+    updateSet.lastSignedIn = user.lastSignedIn;
   }
 
-  try {
-    const values: any = {
-      openId: user.openId,
-    };
-    const updateSet: Record<string, unknown> = {};
-
-    const textFields = ["name", "email", "loginMethod"] as const;
-    type TextField = (typeof textFields)[number];
-
-    const assignNullable = (field: TextField) => {
-      const value = user[field];
-      if (value === undefined) return;
-      const normalized = value ?? null;
-      values[field] = normalized;
-      updateSet[field] = normalized;
-    };
-
-    textFields.forEach(assignNullable);
-
-    if (user.lastSignedIn !== undefined) {
-      values.lastSignedIn = user.lastSignedIn;
-      updateSet.lastSignedIn = user.lastSignedIn;
-    }
-    if (user.role !== undefined) {
-      values.role = user.role;
-      updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
-    }
-
-    if (!values.lastSignedIn) {
-      values.lastSignedIn = new Date();
-    }
-
-    if (Object.keys(updateSet).length === 0) {
-      updateSet.lastSignedIn = new Date();
-    }
-
-    // Handle different syntax for MySQL and PostgreSQL
-    if (process.env.DATABASE_URL?.startsWith("postgres") || process.env.DATABASE_URL?.startsWith("postgresql")) {
-      await db.insert(users).values(values).onConflictDoUpdate({
-        target: users.openId,
-        set: updateSet,
-      });
-    } else {
-      await db.insert(users).values(values).onDuplicateKeyUpdate({
-        set: updateSet,
-      });
-    }
-  } catch (error) {
-    console.error("[Database] Failed to upsert user:", error);
-    throw error;
+  if (process.env.DATABASE_URL?.startsWith("postgres")) {
+    await db.insert(users).values(values).onConflictDoUpdate({
+      target: users.openId,
+      set: updateSet,
+    });
+  } else {
+    await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
   }
 }
 
 export async function getUserByOpenId(openId: string) {
   const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
-  }
-
+  if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
-  return result.length > 0 ? result[0] : undefined;
+  return result[0];
 }
 
-// Funções para Publicações
-export async function createPublication(data: InsertPublication) {
+export async function createPublication(data: schema.InsertPublication) {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.insert(publications).values(data);
-  return result;
+  if (!db) throw new Error("DB not available");
+  return db.insert(publications).values(data);
 }
 
 export async function getPublications(published?: boolean) {
@@ -129,36 +84,32 @@ export async function getPublicationBySlug(slug: string) {
   const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(publications).where(eq(publications.slug, slug)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
+  return result[0];
 }
 
 export async function getPublicationById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(publications).where(eq(publications.id, id)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
+  return result[0];
 }
 
-export async function updatePublication(id: number, data: Partial<InsertPublication>) {
+export async function updatePublication(id: number, data: Partial<schema.InsertPublication>) {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.update(publications).set(data).where(eq(publications.id, id));
-  return result;
+  if (!db) throw new Error("DB not available");
+  return db.update(publications).set(data).where(eq(publications.id, id));
 }
 
 export async function deletePublication(id: number) {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.delete(publications).where(eq(publications.id, id));
-  return result;
+  if (!db) throw new Error("DB not available");
+  return db.delete(publications).where(eq(publications.id, id));
 }
 
-// Funções para Leads
-export async function createLead(data: InsertLead) {
+export async function createLead(data: schema.InsertLead) {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.insert(leads).values(data);
-  return result;
+  if (!db) throw new Error("DB not available");
+  return db.insert(leads).values(data);
 }
 
 export async function getLeads() {
@@ -167,54 +118,17 @@ export async function getLeads() {
   return db.select().from(leads);
 }
 
-// Funções para Áreas de Atuação
 export async function getPracticeAreas() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(practiceAreas).orderBy(practiceAreas.order);
 }
 
-export async function createPracticeArea(data: InsertPracticeArea) {
+export async function getAdminByEmail(email: string): Promise<schema.AdminUser | null> {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.insert(practiceAreas).values(data);
-  return result;
-}
-
-// Admin authentication
-export async function createAdminUser(email: string, password: string, name: string): Promise<AdminUser | null> {
-  const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot create admin user: database not available");
-    return null;
-  }
-
-  try {
-    const passwordHash = hashPassword(password);
-    await db.insert(adminUsers).values({
-      email,
-      passwordHash,
-      name,
-      active: 1,
-    });
-    
-    const result = await db.select().from(adminUsers).where(eq(adminUsers.email, email)).limit(1);
-    return result.length > 0 ? result[0] : null;
-  } catch (error) {
-    console.error("[Database] Failed to create admin user:", error);
-    return null;
-  }
-}
-
-export async function getAdminByEmail(email: string): Promise<AdminUser | null> {
-  const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get admin user: database not available");
-    return null;
-  }
-
+  if (!db) return null;
   const result = await db.select().from(adminUsers).where(eq(adminUsers.email, email)).limit(1);
-  return result.length > 0 ? result[0] : null;
+  return result[0] || null;
 }
 
 export function hashPassword(password: string): string {
