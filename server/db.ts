@@ -1,7 +1,4 @@
 import { eq } from "drizzle-orm";
-import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
-import { drizzle as drizzlePostgres } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
 import { InsertUser, users, publications, InsertPublication, leads, InsertLead, practiceAreas, InsertPracticeArea, adminUsers, AdminUser } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import * as crypto from 'crypto';
@@ -15,10 +12,15 @@ export async function getDb() {
       const url = process.env.DATABASE_URL;
       if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
         console.log("[Database] Connecting to PostgreSQL (Supabase)...");
+        // Dynamic import to avoid loading mysql2 if not needed
+        const { drizzle: drizzlePostgres } = await import("drizzle-orm/postgres-js");
+        const { default: postgres } = await import("postgres");
         const queryClient = postgres(url);
         _db = drizzlePostgres(queryClient);
       } else {
         console.log("[Database] Connecting to MySQL...");
+        // Dynamic import to avoid loading postgres if not needed
+        const { drizzle: drizzleMysql } = await import("drizzle-orm/mysql2");
         _db = drizzleMysql(url);
       }
     } catch (error) {
@@ -120,7 +122,7 @@ export async function getPublications(published?: boolean) {
   const db = await getDb();
   if (!db) return [];
   const query = published !== undefined 
-    ? db.select().from(publications).where(eq(publications.published, published ? 1 : 0))
+    ? db.select().from(publications).where(eq(publications.status, published ? 'published' : 'draft'))
     : db.select().from(publications);
   return query;
 }

@@ -19,4 +19,4 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["mysql2", "postgres"]
+  external_node_modules = ["mysql2", "postgres", "drizzle-orm", "jose"]
