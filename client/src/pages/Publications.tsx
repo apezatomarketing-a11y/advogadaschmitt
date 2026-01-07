@@ -48,18 +48,21 @@ export default function Publications() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950">
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-12 px-4 bg-gradient-to-br from-[#003366] to-[#0099CC] text-white">
-        <div className="container mx-auto max-w-6xl">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Publicações e Artigos
-          </h1>
-          <p className="text-lg text-gray-200 max-w-2xl">
-            Conheça as últimas análises jurídicas e insights sobre direito empresarial, compliance e saúde.
-          </p>
+      <section className="pt-40 pb-24 px-4 bg-gradient-header text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10"></div>
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="animate-slideInLeft">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              Blog
+            </h1>
+            <p className="text-xl text-gray-200 max-w-2xl leading-relaxed">
+              Conheça as últimas análises jurídicas e insights sobre direito empresarial, compliance e saúde.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -117,7 +120,7 @@ export default function Publications() {
               {filteredPublications.map((publication) => (
                 <Link key={publication.id} href={`/publicacoes/${publication.slug}`}>
                   <a className="group">
-                    <div className="h-full bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-2 flex flex-col">
+                    <div className="h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden hover-lift flex flex-col animate-slideInUp">
                       {publication.coverImage && (
                         <div className="h-48 bg-gradient-to-br from-[#003366] to-[#0099CC] overflow-hidden">
                           <img

@@ -3,22 +3,25 @@ import Footer from "@/components/Footer";
 import FloatingWhatsapp from "@/components/FloatingWhatsapp";
 import { Button } from "@/components/ui/button";
 import { BRAND_WHATSAPP } from "@/const";
-import { ArrowRight, Award, Users, Target } from "lucide-react";
+import { ArrowRight, Award, Users, Target, Shield, Heart, Activity } from "lucide-react";
 
 export default function About() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950">
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-12 px-4 bg-gradient-to-br from-[#003366] to-[#0099CC] text-white">
-        <div className="container mx-auto max-w-6xl">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Sobre Nós
-          </h1>
-          <p className="text-lg text-gray-200 max-w-2xl">
-            Conheça a história e a expertise da Vieira Schmitt Advocacia
-          </p>
+      <section className="pt-40 pb-24 px-4 bg-gradient-header text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10"></div>
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="animate-slideInLeft">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              Sobre <span className="text-[#FF9900]">Nós</span>
+            </h1>
+            <p className="text-xl text-gray-200 max-w-2xl leading-relaxed">
+              Conheça a história e a expertise da Vieira Schmitt Advocacia, focada em resultados estratégicos e humanizados.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -76,44 +79,44 @@ export default function About() {
           </div>
 
           {/* Values Section */}
-          <div className="bg-gray-50 rounded-lg p-12 mb-20">
-            <h2 className="text-3xl font-bold text-[#003366] mb-12 text-center">
+          <div className="py-24 mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#003366] dark:text-white mb-16 text-center">
               Nossos Valores
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#FF9900] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="text-white" size={32} />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {[
+                {
+                  title: "Ética",
+                  desc: "Atuamos com total transparência e responsabilidade em todas as nossas ações.",
+                  icon: Shield,
+                },
+                {
+                  title: "Humanização",
+                  desc: "Compreendemos as necessidades reais dos nossos clientes e suas famílias.",
+                  icon: Heart,
+                },
+                {
+                  title: "Resultados",
+                  desc: "Nosso compromisso é entregar soluções práticas e eficazes para seus desafios.",
+                  icon: Activity,
+                },
+              ].map((valor, index) => (
+                <div
+                  key={index}
+                  className="p-10 bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 hover-lift group animate-slideInUp"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="w-14 h-14 bg-[#FF9900]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#FF9900] transition-all duration-500">
+                    <valor.icon className="text-[#FF9900] group-hover:text-white transition-colors" size={28} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#003366] dark:text-white mb-4 group-hover:text-[#FF9900] transition-colors">
+                    {valor.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                    {valor.desc}
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-[#003366] mb-2">
-                  Ética
-                </h3>
-                <p className="text-gray-700">
-                  Atuamos com total transparência e responsabilidade em todas as nossas ações.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#FF9900] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="text-white" size={32} />
-                </div>
-                <h3 className="text-xl font-bold text-[#003366] mb-2">
-                  Humanização
-                </h3>
-                <p className="text-gray-700">
-                  Compreendemos as necessidades reais dos nossos clientes e suas famílias.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#FF9900] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Award className="text-white" size={32} />
-                </div>
-                <h3 className="text-xl font-bold text-[#003366] mb-2">
-                  Resultados
-                </h3>
-                <p className="text-gray-700">
-                  Nosso compromisso é entregar soluções práticas e eficazes para seus desafios.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
 

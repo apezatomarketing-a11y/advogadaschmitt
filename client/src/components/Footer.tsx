@@ -9,14 +9,19 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bg-[#003366] text-white pt-16 pb-8">
+      <footer className="bg-gradient-footer text-white pt-24 pb-12 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[#003366] -z-10"></div>
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             {/* Brand Column */}
             <div className="flex flex-col gap-6">
-              <div>
-                <h3 className="text-xl font-bold mb-2">{BRAND_NAME}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
+              <div 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="cursor-pointer group hover-lift inline-block"
+              >
+                <h3 className="text-2xl font-bold mb-1 group-hover:text-[#FF9900] transition-colors">{BRAND_NAME}</h3>
+                <span className="text-[10px] text-[#FF9900] font-bold tracking-[0.2em] uppercase block mb-4">Advocacia</span>
+                <p className="text-gray-300 text-sm leading-relaxed max-w-xs">
                   Advocacia estratégica para empresários que valorizam segurança jurídica e resultados.
                 </p>
               </div>
@@ -77,27 +82,42 @@ export default function Footer() {
 
             {/* Services */}
             <div>
-              <h3 className="font-bold text-lg mb-6">Serviços</h3>
+              <h3 className="font-bold text-lg mb-6 border-b border-white/10 pb-2">Serviços</h3>
               <ul className="flex flex-col gap-3">
                 <li>
-                  <a href="#compliance" className="text-gray-300 hover:text-[#FF9900] transition-colors">
-                    Compliance
-                  </a>
+                  <Link href="/para-empresas#compliance">
+                    <a className="text-gray-300 hover:text-[#FF9900] transition-all hover:pl-2">Compliance e Gestão Ambiental</a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#direito-empresarial" className="text-gray-300 hover:text-[#FF9900] transition-colors">
-                    Direito Empresarial
-                  </a>
+                  <Link href="/para-empresas#administrativo">
+                    <a className="text-gray-300 hover:text-[#FF9900] transition-all hover:pl-2">Direito Administrativo</a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#saude" className="text-gray-300 hover:text-[#FF9900] transition-colors">
-                    Direito à Saúde
-                  </a>
+                  <Link href="/para-empresas#empresarial">
+                    <a className="text-gray-300 hover:text-[#FF9900] transition-all hover:pl-2">Direito Empresarial</a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#cannabis" className="text-gray-300 hover:text-[#FF9900] transition-colors">
-                    Cannabis Medicinal
-                  </a>
+                  <Link href="/para-empresas#protecao">
+                    <a className="text-gray-300 hover:text-[#FF9900] transition-all hover:pl-2">Proteção Patrimonial</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/saude#cannabis">
+                    <a className="text-gray-300 hover:text-[#FF9900] transition-all hover:pl-2">Direito à Saúde & Cannabis</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/saude#humanizada">
+                    <a className="text-gray-300 hover:text-[#FF9900] transition-all hover:pl-2">Judicialização Humanizada</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/familia#sucessorio">
+                    <a className="text-gray-300 hover:text-[#FF9900] transition-all hover:pl-2">Planejamento Sucessório</a>
+                  </Link>
                 </li>
               </ul>
             </div>

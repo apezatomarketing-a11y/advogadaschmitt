@@ -256,6 +256,41 @@
     animation-delay: 0.5s;
   }
 
+  /* Efeito de Relevo e Expansão (Estilo Apezato) */
+  .hover-lift {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .hover-lift:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Linha deslizante no menu */
+  .nav-link-underline {
+    position: relative;
+  }
+  .nav-link-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #FF9900;
+    transition: width 0.3s ease-in-out;
+  }
+  .nav-link-underline:hover::after {
+    width: 100%;
+  }
+
+  /* Degradê de conexão */
+  .bg-gradient-header {
+    background: linear-gradient(to bottom, #003366 0%, #004080 70%, transparent 100%);
+  }
+  .bg-gradient-footer {
+    background: linear-gradient(to top, #003366 0%, #004080 70%, transparent 100%);
+  }
+
   @media (min-width: 640px) {
     .container {
       padding-left: 1.5rem; /* 24px - tablet padding */
