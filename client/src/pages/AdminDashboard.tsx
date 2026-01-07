@@ -131,7 +131,7 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {publications.map((pub) => (
+                  {publications.map((pub: any) => (
                     <tr key={pub.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4">
                         <p className="font-medium text-gray-900 line-clamp-1">

@@ -14,7 +14,7 @@ export const adminRouter = router({
     .mutation(async ({ input }) => {
       const admin = await getAdminByEmail(input.email);
 
-      if (!admin || !verifyPassword(input.password, admin.passwordHash)) {
+      if (!admin || !admin.passwordHash || !verifyPassword(input.password, admin.passwordHash)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Email ou senha inválidos",

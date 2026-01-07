@@ -40,7 +40,6 @@ export async function createContext(
               role: "admin",
               loginMethod: "local",
               createdAt: admin.createdAt,
-              updatedAt: admin.updatedAt,
               lastSignedIn: new Date(),
             } as any;
           }

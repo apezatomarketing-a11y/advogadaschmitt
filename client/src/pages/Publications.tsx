@@ -17,7 +17,7 @@ export default function Publications() {
   const allTags = Array.from(
     new Set(
       publications
-        .flatMap((pub) => {
+        .flatMap((pub: any) => {
           try {
             return pub.tags ? JSON.parse(pub.tags) : [];
           } catch {
@@ -29,7 +29,7 @@ export default function Publications() {
 
   // Filtrar publicações por tag
   const filteredPublications = selectedTag
-    ? publications.filter((pub) => {
+    ? publications.filter((pub: any) => {
         try {
           const tags = pub.tags ? JSON.parse(pub.tags) : [];
           return tags.includes(selectedTag);
@@ -116,7 +116,7 @@ export default function Publications() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPublications.map((publication) => (
+              {filteredPublications.map((publication: any) => (
                 <Link key={publication.id} href={`/publicacoes/${publication.slug}`}>
                   <a className="group">
                     <div className="h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden hover-lift flex flex-col animate-slideInUp shadow-sm hover:shadow-xl transition-all duration-300">

@@ -138,3 +138,36 @@ export function hashPassword(password: string): string {
 export function verifyPassword(password: string, hash: string): boolean {
   return hashPassword(password) === hash;
 }
+
+export async function createAdminUser(email: string, password: string, name: string) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  
+  const data: schema.InsertAdminUser = {
+    email,
+    passwordHash: hashPassword(password),
+    name,
+    active: 1,
+    role: "admin",
+  };
+  
+  const result = await db.insert(adminUsers).values(data);
+  // Para MySQL/Postgres o retorno do insert pode variar, vamos buscar o usuário criado
+  return getAdminByEmail(email);
+}
+
+export async function createPracticeArea(data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  
+  // Mapear campos do input para o schema
+  const insertData: schema.InsertPracticeArea = {
+    title: data.titlePt,
+    description: data.descriptionPt,
+    icon: data.icon,
+    order: data.order,
+    active: 1,
+  };
+  
+  return db.insert(practiceAreas).values(insertData);
+}
