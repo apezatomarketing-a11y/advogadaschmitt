@@ -10,6 +10,7 @@
   from = "/api/trpc/*"
   to = "/.netlify/functions/trpc"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"

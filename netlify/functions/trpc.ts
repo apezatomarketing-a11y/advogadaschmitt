@@ -19,14 +19,17 @@ export const handler: Handler = async (event, context) => {
   }
 
   try {
-    // The fetchRequestHandler expects the path to include the endpoint
-    // We use the rawUrl to get the full path
+    // Netlify redirects /api/trpc/* to /.netlify/functions/trpc
+    // We need to construct the correct URL for the tRPC fetch adapter
+    // The procedure name is usually in the path after /api/trpc/
+    
     const url = new URL(event.rawUrl);
     
-    // When redirected from /api/trpc/* to /.netlify/functions/trpc
-    // we need to make sure the tRPC fetch adapter knows where the endpoint starts
-    // If the URL is /api/trpc/admin.login, the endpoint is /api/trpc
-    
+    // If the path is just /.netlify/functions/trpc, we need to restore the original path
+    // so tRPC can find the procedure. Netlify puts the original path in event.path
+    const originalPath = event.path; // e.g. /api/trpc/admin.login
+    url.pathname = originalPath;
+
     const response = await fetchRequestHandler({
       endpoint: "/api/trpc",
       req: new Request(url.toString(), {
@@ -62,7 +65,13 @@ export const handler: Handler = async (event, context) => {
     console.error("tRPC handler error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Internal Server Error", details: error instanceof Error ? error.message : String(error) }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        error: "Internal Server Error", 
+        message: error instanceof Error ? error.message : String(error) 
+      }),
     };
   }
 };
