@@ -108,11 +108,11 @@ export default function PublicationDetail() {
               </div>
             )}
 
-            {/* Subtitle/Description */}
-            {publication.description && (
+            {/* Subtitle/Excerpt */}
+            {publication.excerpt && (
               <div className="mb-10">
                 <p className="text-2xl text-gray-600 font-medium leading-relaxed border-l-4 border-[#FF9900] pl-6">
-                  {publication.description}
+                  {publication.excerpt}
                 </p>
               </div>
             )}

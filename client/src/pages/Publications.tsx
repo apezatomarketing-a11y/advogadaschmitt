@@ -141,9 +141,9 @@ export default function Publications() {
                           {publication.title}
                         </h3>
                         
-                        {/* Subtítulo (Description) */}
+                        {/* Subtítulo (Excerpt) */}
                         <p className="text-gray-600 text-sm mb-6 line-clamp-3 flex-grow leading-relaxed">
-                          {publication.description}
+                          {publication.excerpt}
                         </p>
 
                         <div className="flex items-center justify-between pt-6 border-t border-gray-100">

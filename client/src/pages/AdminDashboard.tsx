@@ -144,12 +144,12 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                            pub.published
+                            pub.status === "published"
                               ? "bg-green-100 text-green-800"
                               : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
-                          {pub.published ? "Publicada" : "Rascunho"}
+                          {pub.status === "published" ? "Publicada" : "Rascunho"}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">

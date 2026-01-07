@@ -55,9 +55,9 @@ export default function AdminPublicationForm() {
       setFormData({
         title: publication.title,
         slug: publication.slug,
-        description: publication.description || "",
+        description: publication.excerpt || "",
         content: publication.content,
-        author: publication.author,
+        author: publication.author || "Dra. Vieira Schmitt",
         tags: publication.tags || "",
         coverImage: publication.featuredImage || "",
         published: publication.status === "published" ? 1 : 0,
@@ -103,7 +103,7 @@ export default function AdminPublicationForm() {
     const payload = {
       title: formData.title,
       slug: formData.slug,
-      description: formData.description,
+      excerpt: formData.description,
       content: formData.content,
       author: formData.author,
       featuredImage: formData.coverImage,
